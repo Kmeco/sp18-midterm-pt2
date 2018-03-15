@@ -67,7 +67,6 @@ contract MultiSigWallet {
         require(address(this).balance >= amount);
         //YOUR CODE HERE
         msg.sender.transfer(amount);
-
     }
 
     /// @dev Send ether to specific a transaction
@@ -116,33 +115,45 @@ contract MultiSigWallet {
 
       //Create variable transaction using storage (which creates a reference point)
       //YOUR CODE HERE
+        Transaction storage trans;
 
       // Transaction must exist, note: use require(), but can't do require(transaction), .
       //YOUR CODE HERE
+        require(_transactions[transactionID] == trans);
 
       // Creator cannot sign the transaction, use require()
       //YOUR CODE HERE
+        require(msg.sender != trans.source);
 
       // Cannot sign a transaction more than once, use require()
       //YOUR CODE HERE
+        require(trans.signatures[msg.sender] < 1);
 
       // assign the transaction = 1, so that when the function is called again it will fail
       //YOUR CODE HERE
+        trans.value = 1;
 
       // increment signatureCount
       //YOUR CODE HERE
+        trans.signatureCount += 1;
 
       // log transaction
       //YOUR CODE HERE
+        TransactionSigned(msg.sender, transactionID);
 
       //  check to see if transaction has enough signatures so that it can actually be completed
       // if true, make the transaction. Don't forget to log the transaction was completed.
       if (transactionID.signatureCount >= MIN_SIGNATURES) {
-        require(address(this).balance >= transactionID.value); //validatetransaction
+          require(address(this).balance >= transactionID.value); //validatetransaction
         //YOUR CODE HERE
+          address(this).balance -= trans.value;
+          if(!trans.destination.send(trans.value)){
+              address(this).balance += amount;
+          }
 
         //log that the transaction was complete
         //YOUR CODE HERE
+          TransactionCompleted(trans.source, trans.destination, trans.value, transactionID);
 
         //end with a call to deleteTransaction
         deleteTransaction(transactionID);
