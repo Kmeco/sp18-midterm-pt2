@@ -127,7 +127,7 @@ contract MultiSigWallet {
 
       // Creator cannot sign the transaction, use require()
       //YOUR CODE HERE
-        require(trans.signatures[source] == 0);
+        require(msg.sender != trans.source);
 
       // Cannot sign a transaction more than once, use require()
       //YOUR CODE HERE
@@ -148,11 +148,16 @@ contract MultiSigWallet {
       //  check to see if transaction has enough signatures so that it can actually be completed
       // if true, make the transaction. Don't forget to log the transaction was completed.
       if (transactionID.signatureCount >= MIN_SIGNATURES) {
-        require(address(this).balance >= transactionID.value); //validatetransaction
+          require(address(this).balance >= transactionID.value); //validatetransaction
         //YOUR CODE HERE
+          address(this).balance -= trans.value;
+          if(!trans.destination.send(trans.value)){
+              address(this).balance += amount;
+          }
 
         //log that the transaction was complete
         //YOUR CODE HERE
+          TransactionCompleted(trans.source, trans.destination, trans.value, transactionID);
 
         //end with a call to deleteTransaction
         deleteTransaction(transactionID);
