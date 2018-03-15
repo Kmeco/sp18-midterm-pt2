@@ -80,7 +80,7 @@ contract MultiSigWallet {
     function transferTo(address destination, uint value) validOwner public {
         require(address(this).balance >= value);
         //YOUR CODE HERE
-
+        _transactionIndex ++;
         //create the transaction
         //YOUR CODE HERE
         Transaction memory trans = Transaction(msg.sender, destination, value, MIN_SIGNATURES);
@@ -93,7 +93,6 @@ contract MultiSigWallet {
         //log that the transaction was created to a specific address
         //YOUR CODE HERE
         TransactionCreated(msg.sender, destination, value, _transactionIndex);
-        _transactionIndex ++;
     }
 
     //returns pending transcations
@@ -143,6 +142,7 @@ contract MultiSigWallet {
 
       //  check to see if transaction has enough signatures so that it can actually be completed
       // if true, make the transaction. Don't forget to log the transaction was completed.
+
       if (trans.signatureCount >= MIN_SIGNATURES) {
           require(address(this).balance >= trans.value); //validatetransaction
         //YOUR CODE HERE
