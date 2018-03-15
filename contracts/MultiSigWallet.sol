@@ -60,16 +60,13 @@ contract MultiSigWallet {
 
     /// @dev Fallback function, which accepts ether when sent to contract
     function () public payable {
-        DepositFunds(msg.sender, msg.value);
+        emit DepositFunds(msg.sender, msg.value);
     }
 
     function withdraw(uint amount) public {
         require(address(this).balance >= amount);
         //YOUR CODE HERE
-        address(this).balance -= amount;
-        if(!msg.sender.send(amount)){
-            address(this).balance += amount;
-        }
+        msg.sender.transfer(amount);
 
     }
 
@@ -84,27 +81,27 @@ contract MultiSigWallet {
     function transferTo(address destination, uint value) validOwner public {
         require(address(this).balance >= value);
         //YOUR CODE HERE
-        _transactionIndex
-        Transactin trans = Transaction(msg.sender, destination, value,
-                                        MIN_SIGNATURES);
+
         //create the transaction
         //YOUR CODE HERE
-
-
-
-
+        Transaction memory trans = Transaction(msg.sender, destination, value, MIN_SIGNATURES);
 
         //add transaction to the data structures
         //YOUR CODE HERE
+        _transactions[_transactionIndex] = trans;
+        _pendingTransactions.push(_transactionIndex);
 
 
         //log that the transaction was created to a specific address
         //YOUR CODE HERE
+        emit TransactionCreated(msg.sender, destination, value, _transactionIndex);
+        _transactionIndex ++;
     }
 
     //returns pending transcations
     function getPendingTransactions() constant validOwner public returns (uint[]) {
       //YOUR CODE HERE
+        return _pendigTransactions;
     }
 
     /// @dev Allows an owner to confirm a transaction.
