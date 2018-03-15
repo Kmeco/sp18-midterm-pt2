@@ -49,11 +49,13 @@ contract MultiSigWallet {
     /// @dev add new owner to have access, enables the ability to create more than one owner to manage the wallet
     function addOwner(address newOwner) isOwner public {
       //YOUR CODE HERE
+
     }
 
     /// @dev remove suspicious owners
     function removeOwner(address existingOwner) isOwner public {
       //YOUR CODE HERE
+
     }
 
     /// @dev Fallback function, which accepts ether when sent to contract
@@ -64,6 +66,7 @@ contract MultiSigWallet {
     function withdraw(uint amount) public {
       require(address(this).balance >= value);
       //YOUR CODE HERE
+
 
     }
 
