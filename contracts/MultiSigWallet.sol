@@ -100,7 +100,7 @@ contract MultiSigWallet {
     //returns pending transcations
     function getPendingTransactions() constant validOwner public returns (uint[]) {
       //YOUR CODE HERE
-        return _pendigTransactions;
+        return _pendingTransactions;
     }
 
     /// @dev Allows an owner to confirm a transaction.
@@ -115,11 +115,11 @@ contract MultiSigWallet {
 
       //Create variable transaction using storage (which creates a reference point)
       //YOUR CODE HERE
-        Transaction storage trans;
+        Transaction storage trans = _transactions[transactionID];
 
       // Transaction must exist, note: use require(), but can't do require(transaction), .
       //YOUR CODE HERE
-        require(_transactions[transactionID] == trans);
+        require(_transactions[transactionID] != 0);
 
       // Creator cannot sign the transaction, use require()
       //YOUR CODE HERE
