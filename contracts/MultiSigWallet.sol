@@ -60,7 +60,7 @@ contract MultiSigWallet {
 
     /// @dev Fallback function, which accepts ether when sent to contract
     function () public payable {
-        emit DepositFunds(msg.sender, msg.value);
+        DepositFunds(msg.sender, msg.value);
     }
 
     function withdraw(uint amount) public {
@@ -93,7 +93,7 @@ contract MultiSigWallet {
 
         //log that the transaction was created to a specific address
         //YOUR CODE HERE
-        emit TransactionCreated(msg.sender, destination, value, _transactionIndex);
+        TransactionCreated(msg.sender, destination, value, _transactionIndex);
         _transactionIndex ++;
     }
 
@@ -119,7 +119,7 @@ contract MultiSigWallet {
 
       // Transaction must exist, note: use require(), but can't do require(transaction), .
       //YOUR CODE HERE
-        require(_transactions[transactionID] != 0);
+        require(_pendingTransactions[transactionID] == trans);
 
       // Creator cannot sign the transaction, use require()
       //YOUR CODE HERE
@@ -131,7 +131,7 @@ contract MultiSigWallet {
 
       // assign the transaction = 1, so that when the function is called again it will fail
       //YOUR CODE HERE
-        trans.value = 1;
+        trans.signatures[msg.sender] = 1;
 
       // increment signatureCount
       //YOUR CODE HERE
@@ -143,14 +143,10 @@ contract MultiSigWallet {
 
       //  check to see if transaction has enough signatures so that it can actually be completed
       // if true, make the transaction. Don't forget to log the transaction was completed.
-      if (transactionID.signatureCount >= MIN_SIGNATURES) {
-          require(address(this).balance >= transactionID.value); //validatetransaction
+      if (trans.signatureCount >= MIN_SIGNATURES) {
+          require(address(this).balance >= trans.value); //validatetransaction
         //YOUR CODE HERE
-          address(this).balance -= trans.value;
-          if(!trans.destination.send(trans.value)){
-              address(this).balance += amount;
-          }
-
+          require(trans.destination.transfer(trans.value));
         //log that the transaction was complete
         //YOUR CODE HERE
           TransactionCompleted(trans.source, trans.destination, trans.value, transactionID);
