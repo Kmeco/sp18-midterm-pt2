@@ -77,6 +77,7 @@ class App extends Component {
         /// list of events we are tracking in the state object. REMEMBER TO USE 'that'
         /// instead of 'this'. You can use 'that.state.item' to access 'item' from the state
         /// and 'that.setState({item: value})' to reset the value of 'item' to 'value'
+          that.setState({ events: [that.state.events + result.event], numEvents: that.state.events + 1 });
       }
     })
 

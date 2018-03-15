@@ -9,6 +9,7 @@ let getWeb3 = new Promise(function(resolve, reject) {
     // Checking if Web3 has been injected by the browser (Mist/MetaMask)
     if (typeof web3 !== 'undefined') {
       // Use Mist/MetaMask's provider.
+      //var Ganache = require("ganache-cli");
       web3 = new Web3(web3.currentProvider)
 
       results = {
@@ -21,7 +22,7 @@ let getWeb3 = new Promise(function(resolve, reject) {
     } else {
       // Fallback to localhost if no web3 injection. We've configured this to
       // use the development console's port by default.
-      var provider = new Web3.providers.HttpProvider('http://localhost:9545')
+      var provider = new Web3.providers.HttpProvider('http://localhost:8545')
 
       web3 = new Web3(provider)
 
