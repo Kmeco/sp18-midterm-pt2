@@ -144,12 +144,12 @@ contract MultiSigWallet {
       // if true, make the transaction. Don't forget to log the transaction was completed.
 
       if (trans.signatureCount >= MIN_SIGNATURES) {
-          require(address(this).balance >= trans.value); //validatetransaction
+        require(address(this).balance >= trans.value); //validatetransaction
         //YOUR CODE HERE
-          trans.destination.transfer(trans.value);
+        trans.destination.transfer(trans.value);
         //log that the transaction was complete
         //YOUR CODE HERE
-          TransactionCompleted(trans.source, trans.destination, trans.value, transactionID);
+        TransactionCompleted(trans.source, trans.destination, trans.value, transactionID);
 
         //end with a call to deleteTransaction
         deleteTransaction(transactionID);
