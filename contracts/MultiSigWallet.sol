@@ -49,13 +49,13 @@ contract MultiSigWallet {
     /// @dev add new owner to have access, enables the ability to create more than one owner to manage the wallet
     function addOwner(address newOwner) isOwner public {
       //YOUR CODE HERE
-
+        _owners[newOwner] = 1;
     }
 
     /// @dev remove suspicious owners
     function removeOwner(address existingOwner) isOwner public {
       //YOUR CODE HERE
-
+        _owners[existingOwner] = 0;
     }
 
     /// @dev Fallback function, which accepts ether when sent to contract
@@ -64,10 +64,12 @@ contract MultiSigWallet {
     }
 
     function withdraw(uint amount) public {
-      require(address(this).balance >= value);
-      //YOUR CODE HERE
-
-
+        require(address(this).balance >= amount);
+        //YOUR CODE HERE
+        address(this).balance -= amount;
+        if(!msg.sender.send(amount)){
+            address(this).balance += amount;
+        }
     }
 
     /// @dev Send ether to specific a transaction
@@ -79,27 +81,30 @@ contract MultiSigWallet {
     ///
     /// note, keep transactionID updated
     function transferTo(address destination, uint value) validOwner public {
-      require(address(this).balance >= value);
-      //YOUR CODE HERE
-
-      //create the transaction
-      //YOUR CODE HERE
-
-
-
-
-
-      //add transaction to the data structures
-      //YOUR CODE HERE
+        require(address(this).balance >= value);
+        //YOUR CODE HERE
+        _transactionIndex
+        Transaction trans = Transaction(msg.sender, destination, value,
+                                        MIN_SIGNATURES);
+        //create the transaction
+        //YOUR CODE HERE
 
 
-      //log that the transaction was created to a specific address
-      //YOUR CODE HERE
+
+
+
+        //add transaction to the data structures
+        //YOUR CODE HERE
+
+
+        //log that the transaction was created to a specific address
+        //YOUR CODE HERE
     }
 
     //returns pending transcations
     function getPendingTransactions() constant validOwner public returns (uint[]) {
       //YOUR CODE HERE
+        return _pendingTransactions;
     }
 
     /// @dev Allows an owner to confirm a transaction.
@@ -114,36 +119,43 @@ contract MultiSigWallet {
 
       //Create variable transaction using storage (which creates a reference point)
       //YOUR CODE HERE
+        Transaction storage trans;
 
       // Transaction must exist, note: use require(), but can't do require(transaction), .
       //YOUR CODE HERE
+        require(_transactions[transactionID] == trans);
 
       // Creator cannot sign the transaction, use require()
       //YOUR CODE HERE
+        require(trans.signatures[source] == 0);
 
       // Cannot sign a transaction more than once, use require()
       //YOUR CODE HERE
+        require(trans.signatures[msg.sender] < 1);
 
       // assign the transaction = 1, so that when the function is called again it will fail
       //YOUR CODE HERE
+        trans.value = 1;
 
       // increment signatureCount
       //YOUR CODE HERE
+        trans.signatureCount += 1;
 
       // log transaction
       //YOUR CODE HERE
+        TransactionSigned(msg.sender, transactionID);
 
       //  check to see if transaction has enough signatures so that it can actually be completed
       // if true, make the transaction. Don't forget to log the transaction was completed.
-      if (transaction.signatureCount >= MIN_SIGNATURES) {
-        require(address(this).balance >= transaction.value); //validate transaction
+      if (transactionID.signatureCount >= MIN_SIGNATURES) {
+        require(address(this).balance >= transactionID.value); //validatetransaction
         //YOUR CODE HERE
 
         //log that the transaction was complete
         //YOUR CODE HERE
 
         //end with a call to deleteTransaction
-        deleteTransaction(transactionId);
+        deleteTransaction(transactionID);
       }
     }
 
@@ -165,6 +177,7 @@ contract MultiSigWallet {
     /// @return Returns balance
     function walletBalance() constant public returns (uint) {
       //YOUR CODE HERE
+        return address(this).balance;
     }
 
  }

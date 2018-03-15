@@ -85,6 +85,7 @@ class App extends Component {
         console.log(error);
       } else {
         /// YOUR CODE HERE -- same instructions as above
+          that.setState({ events: [that.state.events + result.event], numEvents: that.state.events + 1 });
       }
     })
 
@@ -93,6 +94,7 @@ class App extends Component {
         console.log(error);
       } else {
         /// YOUR CODE HERE -- same instructions as above
+        that.setState({ events: [that.state.events + result.event], numEvents: that.state.events + 1 });
       }
     })
 
@@ -101,6 +103,7 @@ class App extends Component {
         console.log(error);
       } else {
         /// YOUR CODE HERE -- same instructions as above
+        that.setState({ events: [that.state.events + result.event], numEvents: that.state.events + 1});
       }
     })
   }
@@ -111,6 +114,7 @@ class App extends Component {
   /// function, which is documented here -- https://github.com/ethereum/wiki/wiki/JavaScript-API#web3ethsendtransaction
   sendEther() {
     /// YOUR CODE HERE. This should only be 1 line.
+      this.state.web3.eth.sendTransaction(this.state.multiSigContract)
   }
 
   render() {
