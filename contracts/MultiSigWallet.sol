@@ -84,7 +84,9 @@ contract MultiSigWallet {
     function transferTo(address destination, uint value) validOwner public {
         require(address(this).balance >= value);
         //YOUR CODE HERE
-
+        _transactionIndex
+        Transactin trans = Transaction(msg.sender, destination, value,
+                                        MIN_SIGNATURES);
         //create the transaction
         //YOUR CODE HERE
 
