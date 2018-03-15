@@ -117,8 +117,14 @@ contract MultiSigWallet {
 
       // Transaction must exist, note: use require(), but can't do require(transaction), .
       //YOUR CODE HERE
-
-        require(_pendingTransactions[transactionIndex] == transactionId);
+        bool found = false;
+        for(uint i = 0; i < _pendingTransactions.length; i++) {
+            if(_pendingTransactions[i] == transactionId) {
+                found = true;
+                break;
+            }
+        }
+        require(found);
 
       // Creator cannot sign the transaction, use require()
       //YOUR CODE HERE
