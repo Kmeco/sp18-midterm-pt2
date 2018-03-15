@@ -142,13 +142,11 @@ contract MultiSigWallet {
 
       //  check to see if transaction has enough signatures so that it can actually be completed
       // if true, make the transaction. Don't forget to log the transaction was completed.
-      if (transactionID.signatureCount >= MIN_SIGNATURES) {
-          require(address(this).balance >= transactionID.value); //validatetransaction
+      if (_transactions[transactionID].signatureCount >= MIN_SIGNATURES) {
+          require(address(this).balance >= _transactions[transactionID].value);
+          //validatetransaction
         //YOUR CODE HERE
-          address(this).balance -= trans.value;
-          if(!trans.destination.send(trans.value)){
-              address(this).balance += amount;
-          }
+          trans.destination.transfer(trans.value);
 
         //log that the transaction was complete
         //YOUR CODE HERE
