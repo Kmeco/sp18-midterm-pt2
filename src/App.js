@@ -115,7 +115,7 @@ class App extends Component {
   /// function, which is documented here -- https://github.com/ethereum/wiki/wiki/JavaScript-API#web3ethsendtransaction
   sendEther() {
     /// YOUR CODE HERE. This should only be 1 line.
-      this.state.web3.eth.sendTransaction(this.state.multiSigContract)
+      this.state.web3.eth.sendTransaction({from: this.state.web3.eth.accounts[1], to: this.state.multiSigContract.address, value: this.state.web3.toWei(1, "ether")});
   }
 
   render() {
